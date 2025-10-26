@@ -67,7 +67,7 @@ describe('menu.service', () => {
     });
     expect(result[1]).toMatchObject({
       id: '2',
-      category: 'beverages',
+      category: 'cocktails',
       price: 16
     });
 

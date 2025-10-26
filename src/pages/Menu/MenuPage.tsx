@@ -108,7 +108,8 @@ const MenuPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, totalPages]);
 
-  const { activeMenuItem, openMenuItem, closeMenuItem } = useUIStore();
+  const activeMenuItem = useUIStore((state) => state.activeMenuItem);
+  const closeMenuItem = useUIStore((state) => state.closeMenuItem);
 
   return (
     <>
@@ -180,7 +181,7 @@ const MenuPage = () => {
               </Button>
             </div>
           ) : null}
-          <MenuGrid items={paginatedItems} isLoading={isLoading} onQuickView={openMenuItem} />
+          <MenuGrid items={paginatedItems} isLoading={isLoading} />
           {totalPages > 1 ? (
             <div className="flex items-center justify-between gap-4">
               <Button

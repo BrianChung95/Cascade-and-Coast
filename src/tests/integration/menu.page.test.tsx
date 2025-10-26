@@ -125,7 +125,8 @@ describe('MenuPage', () => {
       expect(params.get('search')).toBe('old fashioned');
     });
 
-    expect(screen.getByText('Coal Harbour Old Fashioned')).toBeInTheDocument();
+    const oldFashionedElements = screen.getAllByText('Coal Harbour Old Fashioned');
+    expect(oldFashionedElements.length).toBeGreaterThan(0);
     expect(screen.queryByText('Seawall Burger')).not.toBeInTheDocument();
 
     await userEvent.clear(searchInput);

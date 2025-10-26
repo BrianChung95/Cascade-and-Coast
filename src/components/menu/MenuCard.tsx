@@ -4,15 +4,16 @@ import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import { formatCurrency } from '../../lib/utils';
 import type { MenuItem } from '../../lib/types';
+import { useUIStore } from '../../store/ui.store';
 
 const FALLBACK_IMAGE = '/src/assets/placeholder.jpg';
 
 interface MenuCardProps {
   item: MenuItem;
-  onQuickView: (item: MenuItem) => void;
 }
 
-const MenuCard = ({ item, onQuickView }: MenuCardProps) => {
+const MenuCard = ({ item }: MenuCardProps) => {
+  const openMenuItem = useUIStore((state) => state.openMenuItem);
   const [isFallbackImage, setIsFallbackImage] = useState(!item.imageUrl);
 
   const handleImageError = (event: SyntheticEvent<HTMLImageElement>) => {
@@ -50,7 +51,7 @@ const MenuCard = ({ item, onQuickView }: MenuCardProps) => {
       footer={
         <div className="flex items-center justify-between gap-2">
           <h3 className="font-display text-lg font-semibold text-slate-900">{item.title}</h3>
-          <Button size="sm" variant="secondary" onClick={() => onQuickView(item)}>
+          <Button size="sm" variant="secondary" onClick={() => openMenuItem(item)}>
             Details
           </Button>
         </div>
