@@ -65,7 +65,3 @@ Coverage thresholds are enforced via Vitest to maintain confidence in critical u
 2. Authentication and reservation management integrated with a real backend.
 3. Headless CMS integration to empower non-technical staff to manage menu and location content.
 4. Internationalization with localized currency formatting and translations.
-
-## License
-
-MIT
