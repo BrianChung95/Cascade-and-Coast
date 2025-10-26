@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply min-h-screen bg-gradient-to-b from-brand-50 via-white to-stone-100 text-slate-900 antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(255, 196, 150, 0.32), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(255, 138, 79, 0.18), transparent 60%),
+    linear-gradient(180deg, rgba(255, 247, 238, 0.9), rgba(250, 245, 236, 0.7));
+  background-attachment: fixed;
+}
+
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring focus-visible:ring-brand-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: theme('fontFamily.display');
+}
