@@ -26,7 +26,7 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 w-full border-b border-stone-200 bg-white/90 backdrop-blur">
       <Container className="flex items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-3 focus-ring" onClick={handleClose}>
-          <img src="/src/assets/logo.svg" alt="Cascade & Coast Kitchen logo" className="h-10 w-10" />
+          <img src="/logo.svg" alt="Cascade & Coast Kitchen logo" className="h-10 w-10" />
           <span className="font-display text-xl font-semibold tracking-wide text-slate-900">
             Cascade &amp; Coast
           </span>

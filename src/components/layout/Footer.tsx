@@ -8,7 +8,7 @@ const Footer = () => {
       <Container className="grid gap-10 md:grid-cols-3">
         <div>
           <div className="flex items-center gap-3">
-            <img src="/src/assets/logo.svg" alt="Cascade & Coast logomark" className="h-10 w-10" />
+            <img src="/logo.svg" alt="Cascade & Coast logomark" className="h-10 w-10" />
             <span className="font-display text-xl font-semibold text-slate-900">
               Cascade &amp; Coast Kitchen
             </span>
