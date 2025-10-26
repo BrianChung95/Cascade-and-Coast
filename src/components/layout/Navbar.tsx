@@ -51,15 +51,8 @@ const Navbar = () => {
               {label}
             </NavLink>
           ))}
-          <Button asChild variant="primary">
-            <a
-              href="https://calendar.app.google/"
-              target="_blank"
-              rel="noreferrer"
-              className="focus-ring"
-            >
-              Reserve Now
-            </a>
+          <Button variant="primary" onClick={(e) => e.preventDefault()}>
+            Reserve Now
           </Button>
         </nav>
         <button
@@ -103,10 +96,8 @@ const Navbar = () => {
                 {label}
               </NavLink>
             ))}
-            <Button asChild variant="primary" onClick={handleClose}>
-              <a href="https://calendar.app.google/" target="_blank" rel="noreferrer">
-                Reserve Now
-              </a>
+            <Button variant="primary" onClick={(e) => { e.preventDefault(); handleClose(); }}>
+              Reserve Now
             </Button>
           </Container>
         </div>
