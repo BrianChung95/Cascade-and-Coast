@@ -1,7 +1,34 @@
+/**
+ * Application Constants
+ *
+ * Central configuration for:
+ * - API endpoints and URLs
+ * - Menu categories and their mappings
+ * - Location data
+ * - Pagination settings
+ *
+ * Modify these constants to configure the application behavior without
+ * touching component code.
+ */
+
 import type { Category, Location } from './types';
 
+/**
+ * External Menu API Base URL
+ *
+ * Free public API providing menu items for various food categories
+ * Used by menu.service.ts to fetch menu data
+ */
 export const API_BASE_URL = 'https://free-food-menus-api-two.vercel.app';
 
+/**
+ * Menu Categories (Order matters - displayed in this order in UI)
+ *
+ * These categories are used throughout the app:
+ * - MenuPage filter tabs
+ * - URL validation (isCategory type guard)
+ * - API endpoint mapping
+ */
 export const MENU_CATEGORIES: Category[] = [
   'burgers',
   'sandwiches',
@@ -12,26 +39,61 @@ export const MENU_CATEGORIES: Category[] = [
   'mains'
 ];
 
+/**
+ * Category Display Labels
+ *
+ * Maps internal category names to user-friendly labels
+ * Used in MenuPage tabs and MenuCard badges
+ *
+ * Example: 'sides' → 'Shareables', 'mains' → 'Chef Specials'
+ */
 export const CATEGORY_LABELS: Record<Category, string> = {
   burgers: 'Burgers',
   sandwiches: 'Sandwiches',
-  sides: 'Shareables',
+  sides: 'Shareables',        // Custom label for better UX
   cocktails: 'Cocktails',
   beverages: 'Beverages',
   desserts: 'Desserts',
-  mains: 'Chef Specials'
+  mains: 'Chef Specials'       // Custom label for better UX
 };
 
+/**
+ * Category to API Endpoints Mapping
+ *
+ * Some categories fetch from multiple endpoints to get variety:
+ * - sandwiches: Combines sandwiches + BBQ items
+ * - sides: Combines fried chicken + BBQ + pork items
+ * - desserts: Combines desserts + chocolates + ice cream
+ *
+ * Note: Both cocktails and beverages use /drinks endpoint
+ * but are differentiated by CATEGORY_KEYWORDS
+ *
+ * Used in menu.service.ts to fetch category data
+ */
 export const CATEGORY_ENDPOINTS: Record<Category, string[]> = {
   burgers: ['/burgers'],
   sandwiches: ['/sandwiches', '/bbqs'],
   sides: ['/fried-chicken', '/bbqs', '/porks'],
-  cocktails: ['/drinks'],
-  beverages: ['/drinks'],
+  cocktails: ['/drinks'],      // Filtered by keywords
+  beverages: ['/drinks'],       // Filtered by keywords
   desserts: ['/desserts', '/chocolates', '/ice-cream'],
   mains: ['/steaks', '/porks', '/bbqs']
 };
 
+/**
+ * Category Keywords for Item Filtering
+ *
+ * When an endpoint returns mixed items, keywords determine categorization.
+ *
+ * Critical for /drinks endpoint:
+ * - "Maple Old Fashioned" → Contains "old fashioned" → cocktails
+ * - "Iced Coffee" → Contains "coffee" → beverages
+ *
+ * Used in menu.service.ts matchesCategory() function
+ * Case-insensitive matching on item title
+ *
+ * Example: item.title.toLowerCase().includes('old fashioned') → cocktails
+ */
 export const CATEGORY_KEYWORDS: Record<Category, string[]> = {
   burgers: ['burger', 'cheeseburger', 'patty', 'smash'],
   sandwiches: ['sandwich', 'panini', 'club', 'wrap', 'sub'],
@@ -42,9 +104,25 @@ export const CATEGORY_KEYWORDS: Record<Category, string[]> = {
   mains: ['steak', 'salmon', 'rib', 'pasta', 'chicken', 'pork', 'shrimp', 'prime']
 };
 
+/**
+ * Pagination Settings
+ *
+ * ITEMS_PER_PAGE: Number of menu items shown per page (MenuPage.tsx)
+ * MAX_ITEMS_PER_CATEGORY: Limit per category from API to avoid overwhelming UI
+ *
+ * Both set to 9 for a 3x3 grid layout (responsive: 1 col mobile, 2 cols tablet, 3 cols desktop)
+ */
 export const ITEMS_PER_PAGE = 9;
 export const MAX_ITEMS_PER_CATEGORY = 9;
 
+/**
+ * Restaurant Locations
+ *
+ * Hardcoded location data for all restaurant branches
+ * Includes: address, hours, phone, map embed URLs, parking/transit info
+ *
+ * Used in LocationsPage.tsx and HomePage.tsx (featured locations)
+ */
 export const LOCATIONS: Location[] = [
   {
     id: 'coal-harbour',

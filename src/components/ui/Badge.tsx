@@ -6,6 +6,7 @@ interface BadgeProps extends PropsWithChildren {
   className?: string;
 }
 
+// Keep a small palette of badge treatments aligned with the design system.
 const colorMap = {
   brand: 'bg-brand-100 text-brand-700 border border-brand-200',
   neutral: 'bg-stone-100 text-slate-700 border border-stone-200',
@@ -13,6 +14,7 @@ const colorMap = {
   warning: 'bg-amber-100 text-amber-700 border border-amber-200'
 };
 
+// Simple pill-style label for tagging dishes, statuses, or pagination counters.
 const Badge = ({ children, color = 'brand', className }: BadgeProps) => {
   return (
     <span

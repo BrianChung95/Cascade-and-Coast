@@ -1,5 +1,6 @@
 import Container from './Container';
 
+// Branded footer with contact, newsletter, and legal links.
 const Footer = () => {
   const year = new Date().getFullYear();
 

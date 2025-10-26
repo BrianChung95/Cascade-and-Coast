@@ -3,10 +3,11 @@ import clsx from 'clsx';
 
 interface CardProps extends PropsWithChildren {
   className?: string;
-  header?: ReactNode;
-  footer?: ReactNode;
+  header?: ReactNode; // Optional top slot
+  footer?: ReactNode; // Optional bottom slot
 }
 
+// Slot-based card primitive used by menu, location, and home features for consistent framing.
 const Card = ({ className, header, footer, children }: CardProps) => {
   return (
     <article
@@ -15,8 +16,13 @@ const Card = ({ className, header, footer, children }: CardProps) => {
         className
       )}
     >
+      {/* Optional header content such as imagery or badges. */}
       {header ? <div className="mb-4">{header}</div> : null}
+
+      {/* Primary content grows to fill the card body. */}
       <div className="flex-1 text-sm text-slate-700">{children}</div>
+
+      {/* Optional footer for actions or metadata. */}
       {footer ? <div className="mt-6">{footer}</div> : null}
     </article>
   );

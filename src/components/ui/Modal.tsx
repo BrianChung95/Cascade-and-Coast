@@ -10,6 +10,7 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
+// Accessible modal portal with a minimal focus trap and escape handling.
 const Modal = ({ isOpen, onClose, title, description, children }: ModalProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -35,6 +36,7 @@ const Modal = ({ isOpen, onClose, title, description, children }: ModalProps) =>
         const first = focusableElements[0];
         const last = focusableElements[focusableElements.length - 1];
 
+        // Cycle focus within the dialog so keyboard users stay inside the modal.
         if (event.shiftKey && document.activeElement === first) {
           event.preventDefault();
           last.focus();

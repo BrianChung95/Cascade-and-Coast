@@ -4,12 +4,14 @@ import clsx from 'clsx';
 import Container from './Container';
 import Button from '../ui/Button';
 
+// Map routes to their lazy imports so we can warm them up on hover/focus.
 const prefetchMap: Record<string, () => Promise<unknown>> = {
   '/': () => import('../../pages/Home/HomePage'),
   '/menu': () => import('../../pages/Menu/MenuPage'),
   '/locations': () => import('../../pages/Locations/LocationsPage')
 };
 
+// Shared definition for both desktop and mobile navigation lists.
 const navItems = [
   { label: 'Home', to: '/' },
   { label: 'Menu', to: '/menu' },

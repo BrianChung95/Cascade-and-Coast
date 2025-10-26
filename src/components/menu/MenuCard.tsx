@@ -1,3 +1,25 @@
+/**
+ * MenuCard Component
+ *
+ * Displays a single menu item with image, title, description, price, and tags.
+ *
+ * Zustand Usage Pattern (No Prop Drilling):
+ * - This component calls useUIStore directly to get openMenuItem action
+ * - No need to pass onQuickView prop from MenuPage → MenuGrid → MenuCard
+ * - MenuGrid doesn't need to know about modal state at all
+ *
+ * Component Hierarchy:
+ * MenuPage (reads activeMenuItem)
+ *   └─ MenuGrid (no modal knowledge)
+ *        └─ MenuCard (calls openMenuItem directly) ← THIS COMPONENT
+ *
+ * When user clicks "Details" button:
+ * 1. MenuCard calls openMenuItem(item)
+ * 2. Zustand updates global activeMenuItem state
+ * 3. MenuPage (subscribed to activeMenuItem) re-renders
+ * 4. Modal shows with item details
+ */
+
 import { useState, type SyntheticEvent } from 'react';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
@@ -10,10 +32,17 @@ const FALLBACK_IMAGE = '/src/assets/placeholder.jpg';
 
 interface MenuCardProps {
   item: MenuItem;
+  // Note: No onQuickView prop needed! Zustand handles it globally
 }
 
 const MenuCard = ({ item }: MenuCardProps) => {
+  // ===== ZUSTAND GLOBAL STATE =====
+  // Get action directly from store - no prop drilling!
+  // This is the correct way to use Zustand for global actions
   const openMenuItem = useUIStore((state) => state.openMenuItem);
+
+  // ===== LOCAL COMPONENT STATE =====
+  // Image fallback is local to this card, not global
   const [isFallbackImage, setIsFallbackImage] = useState(!item.imageUrl);
 
   const handleImageError = (event: SyntheticEvent<HTMLImageElement>) => {

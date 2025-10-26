@@ -1,3 +1,29 @@
+/**
+ * MenuPage Component
+ *
+ * Displays restaurant menu with filtering, sorting, and pagination.
+ *
+ * Architecture:
+ * - URL-driven state (category, search, sort, page in query params)
+ * - React Query for data fetching and caching
+ * - Client-side filtering/sorting (all data fetched at once)
+ * - Zustand for modal state (menu item details)
+ *
+ * Data Flow Pipeline:
+ * 1. React Query fetches all menu items → cached for 5 minutes
+ * 2. Merge remote data + fallback cocktails
+ * 3. Filter by category and search text (useMemo)
+ * 4. Sort by price or alphabetically (useMemo)
+ * 5. Paginate to 9 items per page (useMemo)
+ * 6. Render MenuGrid with final items
+ *
+ * URL State Examples:
+ * - /menu → All items
+ * - /menu?category=burgers → Only burgers
+ * - /menu?category=burgers&sort=price_asc → Burgers sorted by price
+ * - /menu?search=coastal&page=2 → Search results, page 2
+ */
+
 import { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
@@ -24,21 +50,44 @@ import { useUIStore } from '../../store/ui.store';
 import { FALLBACK_MENU_ITEMS } from '../../lib/fallback-menu';
 
 const MenuPage = () => {
+  // ===== DATA FETCHING (React Query) =====
+  // Fetches all menu items from API, cached for 5 minutes
+  // On subsequent renders, returns cached data instantly (no loading spinner)
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['menu-items'],
     queryFn: fetchMenuItems
   });
+
+  // ===== URL STATE (Single Source of Truth) =====
+  // All filters/sort/pagination live in URL for shareability and bookmarking
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // Read URL parameters
   const categoryParam = searchParams.get('category');
   const sortParam = searchParams.get('sort');
   const searchParam = normalizeQueryParam(searchParams.get('search')) ?? '';
   const pageParam = parsePageParam(searchParams.get('page'));
 
+  // Validate and normalize URL parameters
   const category = isCategory(categoryParam) ? categoryParam : undefined;
   const sort = sortParam === 'price_asc' || sortParam === 'price_desc' ? sortParam : undefined;
   const page = pageParam;
 
+  /**
+   * Update URL parameters (single source of truth for filters)
+   *
+   * Why URL instead of useState?
+   * - Shareable links (send filtered view to others)
+   * - Bookmarkable (save "burgers sorted by price")
+   * - Browser back/forward works
+   * - Deep linking (direct link to search results)
+   *
+   * Important implementation details:
+   * - Uses 'category' in updates (not updates.category !== undefined)
+   *   to allow passing category: undefined to clear filter
+   * - replace: true prevents flooding browser history
+   * - Page resets to 1 when filters change (handled at callsite)
+   */
   const updateParams = (updates: {
     category?: Category | undefined;
     sort?: 'price_asc' | 'price_desc' | undefined;
@@ -51,7 +100,7 @@ const MenuPage = () => {
       if (updates.category) {
         params.set('category', updates.category);
       } else {
-        params.delete('category');
+        params.delete('category');  // "All" tab removes category filter
       }
     }
 
@@ -78,21 +127,36 @@ const MenuPage = () => {
     setSearchParams(params, { replace: true });
   };
 
+  // ===== DATA PREPARATION =====
+  // Merge remote API data with fallback cocktails (business requirement)
   const remoteItems = Array.isArray(data) ? data : [];
   const hasRemoteData = remoteItems.length > 0;
   const shouldUseFallback = !hasRemoteData && !isLoading;
 
-  // Combine remote items with fallback cocktails
+  // Cocktails always use fallback data (never from API)
   const cocktailItems = FALLBACK_MENU_ITEMS.filter(item => item.category === 'cocktails');
   const nonCocktailRemoteItems = hasRemoteData ? remoteItems.filter(item => item.category !== 'cocktails') : [];
-  const items = hasRemoteData ? [...nonCocktailRemoteItems, ...cocktailItems] : shouldUseFallback ? FALLBACK_MENU_ITEMS : cocktailItems;
+
+  // Three scenarios:
+  // 1. API success: remote items + fallback cocktails
+  // 2. API error: all fallback items
+  // 3. Loading: just cocktails (show something while loading)
+  const items = hasRemoteData
+    ? [...nonCocktailRemoteItems, ...cocktailItems]
+    : shouldUseFallback
+      ? FALLBACK_MENU_ITEMS
+      : cocktailItems;
   const usingFallback = shouldUseFallback && !hasRemoteData;
 
+  // ===== FILTERING & SORTING (Performance Optimized with useMemo) =====
+  // useMemo prevents re-filtering/re-sorting on every render
+  // Only recomputes when dependencies change: [items, category, searchParam, sort]
   const filteredItems = useMemo(() => {
     const filtered = filterMenuItems(items, { category, search: searchParam });
     return sortMenuItems(filtered, sort);
   }, [items, category, searchParam, sort]);
 
+  // ===== PAGINATION =====
   const totalItems = filteredItems.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
   const currentPage = Math.min(page, totalPages);
@@ -101,6 +165,8 @@ const MenuPage = () => {
     [filteredItems, currentPage]
   );
 
+  // Auto-correct: If user is on page 5 but filters reduce results to 2 pages,
+  // redirect to page 2 (prevent showing empty "page 5 of 2")
   useEffect(() => {
     if (page > totalPages) {
       updateParams({ page: totalPages });
@@ -108,6 +174,9 @@ const MenuPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, totalPages]);
 
+  // ===== MODAL STATE (Zustand Global State) =====
+  // Used for menu item detail modal
+  // MenuCard calls openMenuItem() directly (no prop drilling)
   const activeMenuItem = useUIStore((state) => state.activeMenuItem);
   const closeMenuItem = useUIStore((state) => state.closeMenuItem);
 

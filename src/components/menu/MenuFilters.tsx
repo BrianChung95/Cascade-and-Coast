@@ -26,6 +26,7 @@ const MenuFilters = ({
   totalItems
 }: MenuFiltersProps) => {
   return (
+    // Encapsulates all filter controls so the page can keep URL/state logic external.
     <section className="space-y-4 rounded-[28px] border border-stone-200 bg-white p-6 shadow-lg shadow-brand-100/50">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -58,6 +59,7 @@ const MenuFilters = ({
           }
         }}
       >
+        {/* Tabs expose the curated category list; "All" clears the filter. */}
         <Tabs.List>
           <Tabs.Trigger value="all">All</Tabs.Trigger>
           {categories.map((category) => (

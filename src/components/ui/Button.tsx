@@ -11,6 +11,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
 }
 
+// Centralize Tailwind tokens for each visual treatment.
 const variantClasses: Record<ButtonVariant, string> = {
   primary: 'border border-transparent bg-brand-500 text-white hover:bg-brand-400',
   secondary:
@@ -34,6 +35,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     if (asChild && children && (children as ReactElement).props) {
+      // Allow consumers to render the styles on an anchor or Link by cloning the child element.
       const child = children as ReactElement;
       return cloneElement(child, {
         className: clsx(child.props.className, mergedClassName),

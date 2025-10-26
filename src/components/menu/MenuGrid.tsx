@@ -10,6 +10,7 @@ interface MenuGridProps {
 
 const MenuGrid = ({ items, isLoading = false, skeletonCount = 6 }: MenuGridProps) => {
   if (isLoading) {
+    // Mirror the final layout shape while data loads to avoid layout shift.
     return (
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: skeletonCount }).map((_, index) => (
@@ -21,6 +22,7 @@ const MenuGrid = ({ items, isLoading = false, skeletonCount = 6 }: MenuGridProps
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Render each dish as a MenuCard once content is ready. */}
       {items.map((item) => (
         <MenuCard key={item.id} item={item} />
       ))}

@@ -4,6 +4,7 @@ import Container from '../../components/layout/Container';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 
+// Quick-hit talking points surfaced beneath the hero section.
 const highlights = [
   {
     title: 'Happy Hour',
@@ -31,6 +32,7 @@ const HomePage = () => {
       </Helmet>
       <section className="relative overflow-hidden pb-24 pt-24">
         <div className="absolute inset-0 -z-10">
+          {/* Soft gradient blobs reinforce the brand palette behind the hero. */}
           <div className="absolute -left-16 top-[-6rem] h-[24rem] w-[24rem] rounded-full bg-brand-200/40 blur-[140px]" />
           <div className="absolute right-[-12rem] top-28 h-[28rem] w-[28rem] rounded-full bg-orange-200/40 blur-[160px]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.85)_0%,transparent_55%)]" />
@@ -52,6 +54,7 @@ const HomePage = () => {
               <Button asChild size="lg">
                 <Link to="/menu">View Menu</Link>
               </Button>
+              {/* Secondary CTA drives visitors toward the locations page. */}
               <Button asChild size="lg" variant="secondary">
                 <Link to="/locations">Find a Location</Link>
               </Button>

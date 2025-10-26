@@ -26,6 +26,7 @@ const LocationsPage = () => {
               accessibility notes below.
             </p>
           </header>
+          {/* Render the full location catalogue so guests can compare hours and amenities. */}
           <div className="grid gap-10">
             {LOCATIONS.map((location) => (
               <LocationCard key={location.id} location={location} />

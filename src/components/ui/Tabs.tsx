@@ -25,6 +25,7 @@ interface TabsProps extends PropsWithChildren {
 const Tabs = ({ value, onValueChange, className, children }: TabsProps) => {
   const baseId = useId();
 
+  // Provide the active value + change handler so triggers/content stay in sync.
   return (
     <TabsContext.Provider value={{ value, onValueChange, baseId }}>
       <div className={clsx('space-y-4', className)}>{children}</div>
@@ -34,6 +35,7 @@ const Tabs = ({ value, onValueChange, className, children }: TabsProps) => {
 
 const TabsList = ({ children }: PropsWithChildren) => {
   return (
+    // Expose a semantic tablist wrapper to keep keyboard navigation predictable.
     <div role="tablist" className="flex flex-wrap gap-2">
       {children}
     </div>
@@ -98,6 +100,7 @@ const TabsContent = ({ value, className, children }: TabsContentProps) => {
   }
 
   return (
+    // Only render the panel when its trigger is active, keeping DOM lean.
     <div
       role="tabpanel"
       id={`${baseId}-panel-${value}`}
