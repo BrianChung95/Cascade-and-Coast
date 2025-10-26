@@ -1,7 +1,6 @@
 # Restaurant Website
 
-![Landing Page](https://placehold.co/1200x720.png)
-![Menu Page](https://placehold.co/1200x720.png)
+[Live Demo →](https://cascade-and-coast.netlify.app/)
 
 ## Overview
 
